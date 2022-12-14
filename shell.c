@@ -41,6 +41,7 @@ void recognizeCmd(char* name){
     char copyCmd[5];
     char makeCmd[7];
     char killCmd[5];
+    char backCmd[6];
 
 	//variables for printing out directory contents
 	int fileEntry;
@@ -88,6 +89,13 @@ void recognizeCmd(char* name){
     killCmd[2] = 'l';
     killCmd[3] = 'l';
     killCmd[4] = ' ';
+
+    backCmd[0] = 'b';
+    backCmd[1] = 'e';
+    backCmd[2] = 'x';
+    backCmd[3] = 'e';
+    backCmd[4] = 'c';
+    backCmd[5] = ' ';
 
     nameMatch = 1;
 
@@ -159,6 +167,16 @@ void recognizeCmd(char* name){
         }
     }
 
+    if (nameMatch < 1){
+        nameMatch = 8;
+        for (nameNum = 0; nameNum < 6; nameNum++){
+            if(name[nameNum] != backCmd[nameNum]){
+				nameMatch = 0;
+			    break;
+            }
+        }
+    }
+
 	if (nameMatch < 1){
 		syscall(0, "Bad command!\r\n");
 		return;
@@ -168,10 +186,12 @@ void recognizeCmd(char* name){
 	
 	for (nameNum = nameSum; nameNum < nameSum + 6; nameNum++){
         if (name[nameNum] == '\0' || name[nameNum] == 0xa){
+                //syscall(0, cmdName);
                 break;            
         }
 		cmdName[nameNum - nameSum] = name[nameNum];
 	}
+    
     for (nameNum = nameNum; nameNum < nameSum + 6; nameNum++){
         cmdName[nameNum - nameSum] = '\0';        
     }
@@ -182,7 +202,8 @@ void recognizeCmd(char* name){
     
     if (nameMatch == 5){
         for (nameNum = nameNum; nameNum < nameSum + 6; nameNum++){
-            if (name[nameNum] == '\0' || name[nameNum] == 0xa){
+            if ((name[nameNum] == '\0' && nameSum < nameNum) || name[nameNum] == 0xa){
+                //syscall(0, copyName);
                 break;            
             }
             copyName[nameNum - nameSum] = name[nameNum]; 
@@ -347,6 +368,17 @@ void recognizeCmd(char* name){
 
     if (nameMatch == 7){
         syscall(9, cmdName[0] - 0x30); // <-- put int here converted from char
+    }
+
+    if (nameMatch == 8){
+		syscall(3, cmdName, cBuffer, &sectorsRead);
+		if (sectorsRead < 1){
+			syscall(0, "Er: File not found\r\n");
+			return;
+		} else {
+			syscall(4, cmdName, &dummy);
+			return;
+		}
     }
 }
 

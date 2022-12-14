@@ -5,20 +5,12 @@ per instruction have been completed, and as with
 previous submissions all steps can be tested with
 the commands each step leading up to Step 7 of this
 project have implemented.
+    (Note: Copy command cannot copy from a file that
+has less that 6 characters in its name, but can copy
+to a file that has less than 6 characters)
     Project E's functionality according to the 
 completion of all steps can be tested by using the
 "exec" command with "tstpr2" as the file to run on 
-the disk. This file can also be killed, however as
-of this submission (days prior to the demo) due
-to an issue implementing step 7, the ability to kill
-a function as it is running is hampered by a 
-modified execution call in the shell. The additions
-to the call make it so the shell no longer
-accepts any further input while another process
-is running in the background. Thus, one cannot
-kill a process unless the current process
-is the shell itself. This will be
-addressed before the in-lecture demo. Yet so, the code in
-the kernel and shell, particularly the killProcess
-and terminate functions in the kernel, should show
-how both operate.
+the disk. To run a program with the intention to
+kill it, use the "bexec" command followed by the
+program's filename.
